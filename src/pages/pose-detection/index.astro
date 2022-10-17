@@ -1,0 +1,57 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+import "@tensorflow/tfjs-backend-webgl";
+import * as handPoseDetection from "@tensorflow-models/hand-pose-detection";
+import * as mpHands from "@mediapipe/hands";
+import * as tfjsWasm from "@tensorflow/tfjs-backend-wasm";
+
+tfjsWasm.setWasmPaths(
+    `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${tfjsWasm.version_wasm}/dist/`
+);
+
+async function createDetector() {
+    const model = handPoseDetection.SupportedModels.MediaPipeHands;
+    const detector = handPoseDetection.createDetector(model, {
+        runtime: 'mediapipe'
+    })
+
+    return detector; 
+}
+---
+
+<script>
+    const video: HTMLVideoElement | null = document.querySelector('#video');
+    if (!video) { throw new Error('#video is null'); }
+
+    const config = {
+      'audio': false,
+      'video': {
+        facingMode: 'user',
+      }
+    };
+
+    window.navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
+        video.srcObject = stream;
+        video.onloadedmetadata = (event) => {
+            video.play();
+        }
+    });
+</script>
+
+<Layout title="Hand pose detection">
+    <main>
+        <h1>Hand pose <span class="text-gradient">detection</span></h1>
+        <canvas></canvas>
+        <video id="video" autoplay muted></video>
+    </main>
+</Layout>
+
+
+
+<style>
+    video {
+        transform: scaleX(-1);
+        width: 100%;
+    }
+</style>
