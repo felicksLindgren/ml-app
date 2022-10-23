@@ -1,26 +1,17 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-
-import "@tensorflow/tfjs-backend-webgl";
-import * as handPoseDetection from "@tensorflow-models/hand-pose-detection";
-import * as mpHands from "@mediapipe/hands";
 import * as tfjsWasm from "@tensorflow/tfjs-backend-wasm";
 
 tfjsWasm.setWasmPaths(
     `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${tfjsWasm.version_wasm}/dist/`
 );
-
-async function createDetector() {
-    const model = handPoseDetection.SupportedModels.MediaPipeHands;
-    const detector = handPoseDetection.createDetector(model, {
-        runtime: 'mediapipe'
-    })
-
-    return detector; 
-}
 ---
 
 <script>
+    import "@tensorflow/tfjs-backend-webgl";
+    import * as handPoseDetection from "@tensorflow-models/hand-pose-detection";
+    import * as mpHands from "@mediapipe/hands";
+
     const video: HTMLVideoElement | null = document.querySelector('#video');
     if (!video) { throw new Error('#video is null'); }
 
@@ -31,12 +22,19 @@ async function createDetector() {
       }
     };
 
+    const model = handPoseDetection.SupportedModels.MediaPipeHands;
+    const detector = await handPoseDetection.createDetector(model, {
+        runtime: 'mediapipe'
+    });
+
     window.navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
         video.srcObject = stream;
         video.onloadedmetadata = (event) => {
             video.play();
         }
     });
+
+    
 </script>
 
 <Layout title="Hand pose detection">
