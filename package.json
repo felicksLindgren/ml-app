@@ -9,6 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mediapipe/hands": "^0.4.1646424915",
+    "@tensorflow-models/hand-pose-detection": "^2.0.0",
+    "@tensorflow/tfjs-backend-webgl": "^4.0.0",
+    "@tensorflow/tfjs-converter": "^4.0.0",
+    "@tensorflow/tfjs-core": "^4.0.0",
     "next": "13.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
