@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link';
+import FpsCounter from '../components/FpsCounter';
 import styles from '../styles/Home.module.css'
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">ml-app!</a>
         </h1>
+        <FpsCounter />
 
         <div className={styles.grid}>
           <Link href="/hand-pose-detection" className={styles.card}>
