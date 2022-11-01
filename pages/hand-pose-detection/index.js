@@ -4,6 +4,14 @@ import { createDetector, SupportedModels } from "@tensorflow-models/hand-pose-de
 import '@tensorflow/tfjs-backend-webgl';
 import { drawResults } from "../../lib/utils";
 
+async function renderResults(detector, video, ctx) {
+    const hands = await detector.estimateHands(video, { flipHorizontal: true });
+    ctx.clearRect(0, 0, video.videoWidth, video.videoHeight);
+    drawResults(hands, ctx);
+
+    requestAnimationFrame(() => { renderResults(detector, video, ctx) });
+}
+
 export default function HandPoseDetection() {
     useEffect(() => {
         async function setup() {
@@ -27,14 +35,7 @@ export default function HandPoseDetection() {
                 const model = SupportedModels.MediaPipeHands;
                 const detector = await createDetector(model, { runtime: 'tfjs' });
 
-
-                setInterval(async () => {
-                    const hands = await detector.estimateHands(video, { flipHorizontal: true });
-                    ctx.clearRect(0, 0, video.videoWidth, video.videoHeight);
-                    drawResults(hands, ctx);
-                }, 1000/30);
-
-                
+                requestAnimationFrame(() => { renderResults(detector, video, ctx) });
             }
         }
 
@@ -47,7 +48,7 @@ export default function HandPoseDetection() {
                 <h1>Hand Pose Detection</h1>
                 <canvas style={{ marginBlockStart: "calc(.67em * 4)", position: "absolute", zIndex: 1 }} id="canvas"></canvas>
                 <video
-                    style={{ transform: "scaleX(-1)", width: "auto", height: "auto" }}
+                    style={{ visibility: "hidden", transform: "scaleX(-1)", width: "auto", height: "auto" }}
                     id="video"
                     playsInline>
                 </video>
