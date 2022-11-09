@@ -5,6 +5,10 @@ import '@tensorflow/tfjs-backend-webgl';
 import { drawResults } from "../../lib/utils";
 import Link from "next/link";
 import { useAnimationFrame } from "../../lib/hooks/useAnimationFrame";
+import * as tfjsWasm from '@tensorflow/tfjs-backend-wasm';
+
+tfjsWasm.setWasmPaths(
+    `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm`);
 
 async function renderResults(detector, video, ctx) {
     const hands = await detector.estimateHands(
@@ -23,6 +27,8 @@ export default function HandPoseDetection() {
     const detectorRef = useRef();
     const videoRef = useRef();
     const [ctx, setCtx] = useState();
+
+    
 
     useEffect(() => {
         async function setup() {
@@ -48,7 +54,14 @@ export default function HandPoseDetection() {
             canvas.height = videoHeight;
 
             const model = SupportedModels.MediaPipeHands;
-            const detector = await createDetector(model, { runtime: 'tfjs' });
+            const detector = await createDetector(
+                model, 
+                { 
+                    runtime: "mediapipe",
+                    maxHands: 2,
+                    solutionPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/hands'
+                }
+            );
 
             videoRef.current = video;
             detectorRef.current = detector;
@@ -60,7 +73,7 @@ export default function HandPoseDetection() {
 
     useAnimationFrame(async delta => {
         await renderResults(detectorRef.current, videoRef.current, ctx);
-    }, detectorRef.current && videoRef.current && ctx);
+    }, !!(detectorRef.current && videoRef.current && ctx));
 
     
 
