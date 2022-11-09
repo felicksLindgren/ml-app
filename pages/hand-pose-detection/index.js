@@ -1,21 +1,30 @@
 import styles from "../../styles/Home.module.css";
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createDetector, SupportedModels } from "@tensorflow-models/hand-pose-detection";
 import '@tensorflow/tfjs-backend-webgl';
 import { drawResults } from "../../lib/utils";
 import Link from "next/link";
+import { useAnimationFrame } from "../../lib/hooks/useAnimationFrame";
 
 async function renderResults(detector, video, ctx) {
+    const hands = await detector.estimateHands(
+        video,
+        { 
+            flipHorizontal: false
+        }
+    );
 
-    const hands = await detector.estimateHands(video, { flipHorizontal: false });
     ctx.clearRect(0, 0, video.videoWidth, video.videoHeight);
     ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
     drawResults(hands, ctx);
-
-    requestAnimationFrame(() => { renderResults(detector, video, ctx) });
 }
 
 export default function HandPoseDetection() {
+    const detectorRef = useRef();
+    const videoRef = useRef();
+    const [ctx, setCtx] = useState();
+    const [fps, setFps] = useState();
+
     useEffect(() => {
         async function setup() {
             const video = document.getElementById('video');
@@ -42,12 +51,19 @@ export default function HandPoseDetection() {
             const model = SupportedModels.MediaPipeHands;
             const detector = await createDetector(model, { runtime: 'tfjs' });
 
-            requestAnimationFrame(() => { renderResults(detector, video, ctx) });
-
+            videoRef.current = video;
+            detectorRef.current = detector;
+            setCtx(ctx);
         }
 
         setup();
     }, []);
+
+    useAnimationFrame(async delta => {
+        await renderResults(detectorRef.current, videoRef.current, ctx);
+    }, detectorRef.current && videoRef.current && ctx);
+
+    
 
     return (
         <div className={styles.container}>
@@ -68,7 +84,7 @@ export default function HandPoseDetection() {
                     id="canvas">
                 </canvas>
 
-                <h1>👋👋👋</h1>
+                <h1>👋👋👋 {fps}fps</h1>
                 <video
                     style={{
                         visibility: "hidden",
