@@ -23,7 +23,6 @@ export default function HandPoseDetection() {
     const detectorRef = useRef();
     const videoRef = useRef();
     const [ctx, setCtx] = useState();
-    const [fps, setFps] = useState();
 
     useEffect(() => {
         async function setup() {
@@ -84,7 +83,7 @@ export default function HandPoseDetection() {
                     id="canvas">
                 </canvas>
 
-                <h1>👋👋👋 {fps}fps</h1>
+                <h1>👋👋👋</h1>
                 <video
                     style={{
                         visibility: "hidden",
