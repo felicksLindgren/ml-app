@@ -20,7 +20,7 @@ async function renderResults(detector, video, ctx) {
 
     ctx.clearRect(0, 0, video.videoWidth, video.videoHeight);
     ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-    drawResults(hands, ctx);
+    drawHands(hands, ctx);
 }
 
 export default function HandPoseDetection() {
@@ -90,7 +90,7 @@ export default function HandPoseDetection() {
                         boxShadow: "0 3px 10px rgb(0 0 0)"
                     }}
                     id="canvas">
-                </canvas>´
+                </canvas>
                 <video
                     style={{
                         visibility: "hidden",
