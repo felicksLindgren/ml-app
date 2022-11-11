@@ -17,7 +17,7 @@ export default function Home() {
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">ml-app!</a>
         </h1>
-        <FpsCounter />
+        {/* <FpsCounter /> */}
 
         <div className={styles.grid}>
           <Link href="/hand-pose-detection" className={styles.card}>
