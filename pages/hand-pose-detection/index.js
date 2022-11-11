@@ -28,8 +28,6 @@ export default function HandPoseDetection() {
     const videoRef = useRef();
     const [ctx, setCtx] = useState();
 
-    
-
     useEffect(() => {
         async function setup() {
             const video = document.getElementById('video');
@@ -73,9 +71,7 @@ export default function HandPoseDetection() {
 
     useAnimationFrame(async delta => {
         await renderResults(detectorRef.current, videoRef.current, ctx);
-    }, !!(detectorRef.current && videoRef.current && ctx));
-
-    
+    }, !!(detectorRef.current && videoRef.current && ctx));  
 
     return (
         <div className={styles.container}>
