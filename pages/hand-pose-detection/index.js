@@ -2,7 +2,7 @@ import styles from "../../styles/Home.module.css";
 import { useEffect, useRef, useState } from 'react';
 import { createDetector, SupportedModels } from "@tensorflow-models/hand-pose-detection";
 import '@tensorflow/tfjs-backend-webgl';
-import { drawResults } from "../../lib/utils";
+import { drawHands } from "../../lib/utils";
 import Link from "next/link";
 import { useAnimationFrame } from "../../lib/hooks/useAnimationFrame";
 import * as tfjsWasm from '@tensorflow/tfjs-backend-wasm';

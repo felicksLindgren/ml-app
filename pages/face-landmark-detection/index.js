@@ -68,9 +68,9 @@ export default function FaceLandmarkDetection() {
     }, []);
 
     useAnimationFrame(async delta => {
-        const faces = await detectorRef.current.estimateFaces(video);
-        
-        ctx.clearRect(0, 0, video.videoWidth, video.videoHeight);
+        const faces = await detectorRef.current.estimateFaces(videoRef.current);
+
+        ctx.clearRect(0, 0, videoRef.current.videoWidth, videoRef.current.videoHeight);
         ctx.drawImage(videoRef.current, 0, 0);
         drawFaces(faces, ctx);
     }, !!(detectorRef.current && videoRef.current && ctx))
