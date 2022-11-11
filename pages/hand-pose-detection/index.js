@@ -80,7 +80,7 @@ export default function HandPoseDetection() {
                     style={{
                         fontWeight: "normal"
                     }}>
-                    <Link style={{ fontWeight: "bold" }} href={'/'}>Home</Link> / Hand Pose Detection
+                    <Link style={{ fontWeight: "bold" }} href={'/'}>Home</Link> / Hand Pose Detection 👋
                 </h2>
                 <canvas
                     style={{
@@ -90,9 +90,7 @@ export default function HandPoseDetection() {
                         boxShadow: "0 3px 10px rgb(0 0 0)"
                     }}
                     id="canvas">
-                </canvas>
-
-                <h1>👋👋👋</h1>
+                </canvas>´
                 <video
                     style={{
                         visibility: "hidden",
