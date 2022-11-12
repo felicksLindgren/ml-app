@@ -82,6 +82,7 @@ export default function HandPoseDetection() {
                     }}>
                     <Link style={{ fontWeight: "bold" }} href={'/'}>Home</Link> / Hand Pose Detection 👋
                 </h2>
+                <code style={{ marginBottom: '1rem' }}>Work in progress...</code>
                 <canvas
                     style={{
                         transform: "scaleX(-1)",
