@@ -10,17 +10,46 @@ import * as tfjsWasm from '@tensorflow/tfjs-backend-wasm';
 tfjsWasm.setWasmPaths(
     `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm`);
 
-async function renderResults(detector, video, ctx) {
-    const hands = await detector.estimateHands(
-        video,
-        { 
-            flipHorizontal: false
+async function setupVideo() {
+    const video = document.getElementById('video');
+    const stream = await window.navigator.mediaDevices.getUserMedia({ video: true });
+
+    video.srcObject = stream;
+    await new Promise((resolve) => {
+        video.onloadedmetadata = () => {
+            resolve();
+        }
+    });
+    video.play();
+
+    video.width = video.videoWidth;
+    video.height = video.videoHeight;
+
+    return video;
+}
+
+async function setupDetector() {
+    const model = SupportedModels.MediaPipeHands;
+    const detector = await createDetector(
+        model,
+        {
+            runtime: "mediapipe",
+            maxHands: 2,
+            solutionPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/hands'
         }
     );
 
-    ctx.clearRect(0, 0, video.videoWidth, video.videoHeight);
-    ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-    drawHands(hands, ctx);
+    return detector;
+}
+
+async function setupCanvas(video) {
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = video.width;
+    canvas.height = video.height;
+
+    return ctx;
 }
 
 export default function HandPoseDetection() {
@@ -29,49 +58,29 @@ export default function HandPoseDetection() {
     const [ctx, setCtx] = useState();
 
     useEffect(() => {
-        async function setup() {
-            const video = document.getElementById('video');
-            const canvas = document.getElementById('canvas');
-            const ctx = canvas.getContext('2d');
-            const stream = await window.navigator.mediaDevices.getUserMedia({ video: true });
+        async function initialize() {
+            videoRef.current = await setupVideo();
+            const ctx = await setupCanvas(videoRef.current);
+            detectorRef.current = await setupDetector();
 
-            video.srcObject = stream;
-            await new Promise((resolve) => {
-                video.onloadeddata = () => {
-                    resolve();
-                };
-            });
-            video.play();
-
-            const videoWidth = video.videoWidth;
-            const videoHeight = video.videoHeight;
-            // Must set below two lines, otherwise video element doesn't show.
-            video.width = videoWidth;
-            video.height = videoHeight;
-            canvas.width = videoWidth;
-            canvas.height = videoHeight;
-
-            const model = SupportedModels.MediaPipeHands;
-            const detector = await createDetector(
-                model, 
-                { 
-                    runtime: "mediapipe",
-                    maxHands: 2,
-                    solutionPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/hands'
-                }
-            );
-
-            videoRef.current = video;
-            detectorRef.current = detector;
             setCtx(ctx);
         }
 
-        setup();
+        initialize();
     }, []);
 
     useAnimationFrame(async delta => {
-        await renderResults(detectorRef.current, videoRef.current, ctx);
-    }, !!(detectorRef.current && videoRef.current && ctx));  
+        const hands = await detectorRef.current.estimateHands(
+            video,
+            {
+                flipHorizontal: false
+            }
+        );
+    
+        ctx.clearRect(0, 0, videoRef.current.videoWidth, videoRef.current.videoHeight);
+        ctx.drawImage(videoRef.current, 0, 0, videoRef.current.videoWidth, videoRef.current.videoHeight);
+        drawHands(hands, ctx);
+    }, !!(detectorRef.current && videoRef.current && ctx));
 
     return (
         <div className={styles.container}>
