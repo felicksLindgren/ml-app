@@ -1,5 +1,5 @@
 ## Try it out here
-[ml-app]('https://ml-app-felickslindgren.vercel.app/')
+[ml-app](https://ml-app-felickslindgren.vercel.app/)
 
 ## Getting Started
 
