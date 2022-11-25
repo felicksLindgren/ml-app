@@ -97,7 +97,8 @@ export default function HandPoseDetection() {
                         transform: "scaleX(-1)",
                         zIndex: 1,
                         borderRadius: "1rem",
-                        boxShadow: "0 3px 10px rgb(0 0 0)"
+                        boxShadow: "0 3px 10px rgb(0 0 0)",
+                        maxWidth: "85vw"
                     }}
                     id="canvas">
                 </canvas>
@@ -105,11 +106,11 @@ export default function HandPoseDetection() {
                     style={{
                         visibility: "hidden",
                         transform: "scaleX(-1)",
-                        width: "auto",
-                        height: "auto",
                         position: "absolute",
                         top: 0,
-                        left: 0
+                        left: 0,
+                        width: 0,
+                        height: 0
                     }}
                     id="video"
                     playsInline>

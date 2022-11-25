@@ -88,7 +88,7 @@ export default function FaceLandmarksDetection() {
                     zIndex: 1,
                     borderRadius: "1rem",
                     boxShadow: "0 3px 10px rgb(0 0 0)",
-                    maxWidth: "75vw"
+                    maxWidth: "85vw"
                 }}
                 id="canvas">
             </canvas>
