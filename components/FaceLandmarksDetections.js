@@ -3,9 +3,10 @@ import { useAnimationFrame } from '../lib/hooks/useAnimationFrame';
 import '@tensorflow/tfjs-backend-webgl';
 import * as tfjsWasm from '@tensorflow/tfjs-backend-wasm';
 import { drawFaces } from '../lib/utils';
-import * as faceLandmarksDetection from '@tensorflow-models/face-landmarks-detection'
+import * as faceLandmarksDetection from '@tensorflow-models/face-landmarks-detection';
 import * as faceMesh from '@mediapipe/face_mesh';
 import '@tensorflow-models/face-detection';
+import { LABEL_TO_COLOR } from '../lib/utils';
 
 tfjsWasm.setWasmPaths(
     `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm`);
@@ -54,6 +55,7 @@ export default function FaceLandmarksDetection() {
     const detectorRef = useRef();
     const videoRef = useRef();
     const [ctx, setCtx] = useState();
+    const contours = faceLandmarksDetection.util.getKeypointIndexByContour(faceLandmarksDetection.SupportedModels.MediaPipeFaceMesh);
 
     useEffect(() => {
         async function initialize() {
@@ -72,7 +74,10 @@ export default function FaceLandmarksDetection() {
 
         ctx.clearRect(0, 0, videoRef.current.videoWidth, videoRef.current.videoHeight);
         ctx.drawImage(videoRef.current, 0, 0);
-        drawFaces(faces, ctx);
+        drawFaces(faces, ctx, contours);
+
+        
+
     }, !!(detectorRef.current && videoRef.current && ctx))
 
     return (
