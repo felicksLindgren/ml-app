@@ -30,12 +30,17 @@ async function setupVideo() {
 
 async function setupDetector() {
     const model = SupportedModels.MediaPipeHands;
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(window.navigator.userAgent);
+    
     const detector = await createDetector(
         model,
-        {
+        !isMobile ? {
             runtime: "mediapipe",
             maxHands: 2,
             solutionPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/hands'
+        } : {
+            runtime: 'tfjs',
+            maxHands: 2
         }
     );
 
