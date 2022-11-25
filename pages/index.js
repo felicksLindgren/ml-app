@@ -15,7 +15,7 @@ export default function Home() {
 
       <main className={styles.main} style={{ justifyContent: "center" }}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">ml-app!</a>
+          Welcome to <Link href='/'>ml-app!</Link>
         </h1>
         {/* <FpsCounter /> */}
 
